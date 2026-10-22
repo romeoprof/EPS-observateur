@@ -1,0 +1,210 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EPS observateur Champ 4</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f6e8c">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#f3f7f9;--ink:#17303b;--mut:#657d89;--pri:#0f6e8c;--soft:#e2eff4;--line:#d6e3e9}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font:16px/1.4 system-ui,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:72px}
+header{background:var(--pri);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;position:sticky;top:0;z-index:5}
+h1{font-size:18px;margin:0}#ap{flex:1;opacity:.85}
+main{padding:14px;max-width:900px;margin:auto}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;background:var(--pri);color:#fff;cursor:pointer}
+button:disabled{opacity:.4}button.s{background:var(--soft);color:var(--pri)}
+button.big{padding:16px 8px;width:100%;margin-bottom:8px;font-size:16px}
+input,select,textarea{font:inherit;padding:10px;border:1px solid var(--line);border-radius:10px;width:100%;margin-bottom:8px}
+input[type=checkbox]{width:auto;margin:0 6px 0 0}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sp{flex:1}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--line)}
+nav button{flex:1;background:none;color:var(--mut);border-radius:0;padding:16px 4px}nav button.on{color:var(--pri);font-weight:700;box-shadow:inset 0 3px var(--pri)}
+table{width:100%;border-collapse:collapse}td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:center}td:first-child,th:first-child{text-align:left}
+.sc{font-size:36px;font-weight:700;text-align:center}.ch{font-size:22px;text-align:center;color:var(--mut);margin:0 0 8px}
+h3{text-align:center;margin:4px 0 10px}
+header{background:linear-gradient(120deg,#0f6e8c,#27a08f);box-shadow:0 2px 8px #0003}
+body{background:linear-gradient(#e9f4f8,#f7fafc) fixed}
+.card{box-shadow:0 2px 8px #0f6e8c18;border-radius:14px}
+button.big{font-weight:600;min-height:64px;box-shadow:0 3px 0 #0003}button.big:active{transform:translateY(2px);box-shadow:none}
+.grid button.big{min-height:84px;font-size:17px}
+button.g{background:#2e9e6b}button.r{background:#d9534f}button.o{background:#e8923a}
+nav{box-shadow:0 -2px 8px #0002}nav button.on{background:var(--soft)}
+.sc{color:var(--pri);background:#e2eff4;border-radius:12px;padding:6px;margin-bottom:6px}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:#17303b;color:#fff;padding:10px 18px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}#toast.on{opacity:1}
+.ct{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;max-width:300px;margin:0 auto 8px}.ct button,.zc{height:34px;border-radius:6px;font-size:13px;padding:0}.ct button{background:#cfe6ee;color:var(--ink)}.ct button.on{background:var(--pri);color:#fff}.zc{display:flex;align-items:center;justify-content:center}.cw{position:relative;max-width:300px;margin:0 auto 4px}.cw svg{display:block;width:100%;border-radius:10px}.cg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(6,1fr)}.cg button,.cg .zc{height:auto;border-radius:0;background:transparent;border:1px dashed rgba(255,255,255,.4);color:#fff;padding:0;font-size:15px}.cg button.on{background:rgba(255,200,0,.6)}.lay{display:block}.pos{display:flex;align-items:center;gap:8px;margin:6px 0 12px}.pos small{flex:0 0 22%;font-weight:600;font-size:13px}.pos small:last-child{text-align:right}.rail{position:relative;flex:1;height:46px;background:var(--soft);border-radius:23px}.ball{position:absolute;top:50%;font-size:30px;line-height:1;transform:translate(-50%,-50%);transition:left .7s ease}@media (orientation:landscape){.lay{display:flex;gap:12px;align-items:flex-start}.lay>.card{flex:0 0 38%;margin-bottom:0}.lay>.grid{flex:1}.lay .cw{max-width:230px}}.ct .net{grid-column:1/-1;text-align:center;font-size:12px;color:var(--mut);border-top:3px solid var(--ink);padding-top:2px}
+</style></head><body>
+<header><h1>EPS observateur Champ 4</h1><span id="ap"></span><button class="s" id="chg" onclick="chg()">Changer d'APSA</button><button class="s" onclick="go('ens')">Espace enseignant</button><button class="s" onclick="upd()">⟳ Mise à jour</button></header>
+<main></main><div id="toast"></div>
+<nav hidden>
+<button data-t="eq" onclick="go('eq')">👥 Équipes</button><button data-t="po" onclick="go('po')">🏆 Poules</button>
+<button data-t="match" onclick="go('match')">⏱️ Match</button><button data-t="bil" onclick="go('bil')">📊 Bilan</button></nav>
+<script>
+/* o: [clé, libellé, point] — point 1 = marque pour l'équipe, -1 = point pour l'adversaire, 0 = aucun. c:1 = sport collectif */
+const col=[["poss","Possession",0],["tir","Tir manqué / arrêté",0],["but","But / panier / essai / point",1],["perte","Perte de balle",0],["faute","Faute",0]];
+const rac=[["gag","Point gagnant",1],["serv","Service gagnant",1],["faute","Faute directe",-1]];
+const APSA0={"Handball":{c:1,o:col},"Basket-ball":{c:1,o:col},"Football":{c:1,o:col},"Rugby":{c:1,o:col},"Ultimate":{c:1,o:col},
+"Badminton":{o:rac},"Tennis de table":{o:rac},"Volley-ball":{o:[["gag","Attaque gagnante",1],["serv","Service gagnant",1],["faute","Faute directe",-1]]}};
+const APSA={
+"Handball":{c:1,o:[["poss","Possession",0],["pas","Passe décisive",0],["tir","Tir arrêté / manqué",0],["but","But",1],["perte","Balle perdue",0],["faute","Faute",0]]},
+"Basket-ball":{c:1,o:[["poss","Possession",0],["reb","Rebond",0],["tir","Tir manqué",0],["but","Panier à 2 pts",2],["tr3","Panier à 3 pts",3],["lf","Lancer franc réussi",1],["perte","Balle perdue",0],["faute","Faute",0]]},
+"Football":{c:1,o:[["poss","Possession",0],["pas","Passe décisive",0],["tir","Tir non cadré / arrêté",0],["but","But",1],["perte","Balle perdue",0],["faute","Faute",0],["cor","Corner obtenu",0]]},
+"Rugby":{c:1,o:[["poss","Possession",0],["gain","Franchissement / gain de terrain",0],["but","Essai",5],["trf","Transformation",2],["pla","Plaquage réussi",0],["perte","Balle perdue",0],["faute","Faute",0]]},
+"Ultimate":{c:1,o:[["poss","Possession du disque",0],["pas","Passe réussie",0],["but","Point marqué",1],["perte","Disque perdu",0],["faute","Faute",0]]},
+"Volley-ball":{o:[["serv","Service gagnant",1],["gag","Attaque gagnante",1],["blo","Contre gagnant",1],["sf","Service manqué",-1],["faute","Faute directe",-1]]},
+"Badminton":{o:[["gag","Coup gagnant",1],["serv","Service gagnant",1],["fil","Faute : filet",-1],["dehors","Faute : dehors",-1],["faute","Faute de service",-1]]},
+"Tennis de table":{o:[["gag","Coup gagnant",1],["serv","Service gagnant",1],["fil","Faute : filet",-1],["dehors","Faute : hors table",-1],["faute","Faute de service",-1]]}};
+let S={ap:null,teams:[],poules:[],matches:[],cur:null,bm:null,obs:{},eleves:[],cfg:{conseil:true}};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("eps")||"{}"))}catch(e){}
+if(S.ap&&!APSA[S.ap])S.ap=null;S.matches=S.matches.filter(m=>APSA[m.ap]);S.poules=S.poules.filter(p=>APSA[p.ap]);
+const save=()=>{try{localStorage.setItem("eps",JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,8);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let tab="match";
+const pc=(a,b)=>b?Math.round(1000*a/b)/10+"%":"–";
+const cur=()=>S.matches.find(m=>m.id==S.cur);
+const name=id=>(S.teams.find(t=>t.id==id)||{n:"?"}).n;
+const O=ap=>S.obs[ap]||APSA[ap].o;
+const P=(m,k)=>(O(m.ap).find(o=>o[0]==k)||[0,0,0])[2];
+const cnt=(m,t,k)=>m.ev.filter(e=>e[0]==t&&e[1]==k).length;
+const score=(m,t)=>m.ev.reduce((s,[x,k])=>{const p=P(m,k);return s+(p>0&&x==t?p:p<0&&x!=t?-p:0)},0);
+const el=m=>m.dur+(m.t0?(Date.now()-m.t0)/1000:0);
+const fmt=s=>String(Math.floor(s/60)).padStart(2,0)+":"+String(Math.floor(s%60)).padStart(2,0);
+const go=t=>{tab=t;R()},chg=()=>{S.ap=null;S.cur=null;tab="match";save();R()};
+const setAp=k=>{S.ap=k;S.cur=null;tab="match";save();R()};
+function R(){const a=S.ap;$("#ap").textContent=a||"";$("#chg").hidden=!a;$("nav").hidden=!a;
+document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==tab));
+$("main").innerHTML=tab=="ens"?vEns():!a?home():{eq:vEq,po:vPo,match:vMatch,bil:vBil}[tab]()}
+const home0=()=>`<div class="card"><b>Choisis l'APSA à observer</b></div><div class="grid">${Object.keys(APSA).map(k=>`<button class="big" onclick="setAp('${k}')">${k}</button>`).join("")}</div>`;
+/* Équipes */
+const vEq0=()=>`<div class="card"><input id="tn" placeholder="Nom de l'équipe ou du joueur"><button onclick="addT()">Ajouter</button></div>`+(S.teams.map(t=>`<div class="card row"><span class="sp">${esc(t.n)}${t.c?` <small>· ${esc(t.c)}</small>`:""}</span><button class="s" onclick="delT('${t.id}')">Supprimer</button></div>`).join("")||`<p>Ajoute les équipes ou les joueurs qui vont jouer.</p>`);
+const addT0=()=>{const v=$("#tn").value.trim();if(v){S.teams.push({id:uid(),n:v});save();R()}};
+const delT=id=>{S.teams=S.teams.filter(t=>t.id!=id);save();R()};
+/* Poules */
+const vPo=()=>`<div class="card"><input id="pn" placeholder="Nom de la poule (ex. Poule A)"><p>${pick()}</p><button onclick="addP()">Créer la poule</button></div>`+S.poules.filter(p=>p.ap==S.ap).map(rank).join("");
+function addP(){const ids=[...document.querySelectorAll(".pk:checked")].map(x=>x.value);if(ids.length<2)return alert("Choisis au moins 2 équipes.");
+const p={id:uid(),n:$("#pn").value.trim()||"Poule",ap:S.ap,ids};S.poules.push(p);
+for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)S.matches.push({id:uid(),ap:S.ap,pid:p.id,a:ids[i],b:ids[j],ev:[],dur:0,done:0});save();R()}
+function rank(p){const T=Object.fromEntries(p.ids.map(i=>[i,{i,j:0,v:0,n:0,d:0,df:0}])),ms=S.matches.filter(m=>m.pid==p.id);
+ms.filter(m=>m.done).forEach(m=>{const x=score(m,0),y=score(m,1),A=T[m.a],B=T[m.b];if(!A||!B)return;A.j++;B.j++;A.df+=x-y;B.df+=y-x;if(x>y){A.v++;B.d++}else if(y>x){B.v++;A.d++}else{A.n++;B.n++}});
+const L=Object.values(T).sort((a,b)=>b.v-a.v||b.df-a.df);
+return `<div class="card"><b>${esc(p.n)}</b> <small>(victoires, puis différence de score)</small><table><tr><th>Équipe<th>J<th>V<th>N<th>D<th>+/-</tr>${L.map((r,k)=>`<tr><td>${k+1}. ${esc(name(r.i))}<td>${r.j}<td>${r.v}<td>${r.n}<td>${r.d}<td>${r.df}</tr>`).join("")}</table>${ms.map(m=>`<div class="row" style="border-top:1px solid var(--line);padding:8px 0"><span class="sp">${esc(name(m.a))} – ${esc(name(m.b))}${m.done?` <b>${score(m,0)}-${score(m,1)}</b>`:""}</span><button onclick="play('${m.id}')">${m.done?"Revoir":"Jouer le match"}</button></div>`).join("")}<button class="s" onclick="delP('${p.id}')">Supprimer la poule</button></div>`}
+const play=id=>{S.cur=id;tab="match";R()};
+const delP=id=>{if(confirm("Supprimer cette poule et ses matchs ?")){S.poules=S.poules.filter(p=>p.id!=id);S.matches=S.matches.filter(m=>m.pid!=id);S.cur=null;save();R()}};
+/* Match */
+function vMatch(){const m=cur();
+if(!m||m.ap!=S.ap){const o=S.teams.map(t=>`<option value="${t.id}">${esc(t.n)}${t.c?" ("+esc(t.c)+")":""}</option>`).join("");return `<div class="card"><b>Match libre</b><p>Équipe A</p><select id="fa">${o}</select><p>Équipe B</p><select id="fb">${o}</select><button onclick="free()">Démarrer l'observation</button></div><p>Pour un match de poule, ouvre l'onglet Poules.</p>`}
+const side=t=>`<div><h3 style="color:#fff;background:${t?'#e07b39':'#0f6e8c'};border-radius:10px;padding:8px">${esc(name(t?m.b:m.a))}</h3>${O(m.ap).map(([k,l,p])=>`<button class="big ${p>0?'g':p<0?'r':k=='perte'||k=='faute'?'o':''}" ${m.done?"disabled":""} onclick="tap(${t},'${k}')">${l}<br><b>${cnt(m,t,k)}</b></button>`).join("")}</div>`;
+return `<div class="card"><div class="sc">${score(m,0)} – ${score(m,1)}</div><p class="ch" id="ch">${fmt(el(m))}</p>${bar(m)}<div class="row"><button class="s" onclick="tg()">${m.t0?"Pause":"Chrono"}</button><button class="s" onclick="undo()">Annuler le dernier</button><button class="s" onclick="fin()">${m.done?"Reprendre":"Terminer"}</button><button class="s" onclick="S.cur=null;R()">Fermer</button></div></div>${m.done?check(m)+(S.cfg.conseil?coach(m):""):rap(m)}<div class="lay">${!m.done&&isR(m.ap)?ctCard(m):""}<div class="grid" style="grid-template-columns:1fr 1fr">${side(0)}${side(1)}</div></div>`}
+function free(){const a=$("#fa").value,b=$("#fb").value;if(!a||a==b)return alert("Choisis deux équipes différentes.");const m={id:uid(),ap:S.ap,pid:null,a,b,ev:[],dur:0,done:0};S.matches.push(m);S.cur=m.id;save();R()}
+const tap=(t,k)=>{cur().ev.push(zn==null?[t,k]:[t,k,zn]);zn=null;save();R()};
+const undo=()=>{cur().ev.pop();save();R()};
+const pause=m=>{if(m.t0){m.dur+=(Date.now()-m.t0)/1000;m.t0=0}};
+const tg=()=>{const m=cur();m.t0?pause(m):m.t0=Date.now();save();R()};
+const fin=()=>{const m=cur();pause(m);m.done=m.done?0:1;if(m.done)m.ts=Date.now();save();R()};
+setInterval(()=>{const m=cur(),c=$("#ch");if(m&&m.t0&&c)c.textContent=fmt(el(m))},500);
+/* Bilan */
+function stats(m){const r=[],d=el(m)/60,add=(l,f)=>r.push([l,f(0),f(1)]);
+if(APSA[m.ap].c){const g=(t,k)=>k=="but"?O(m.ap).filter(o=>o[2]>0).reduce((s,o)=>s+cnt(m,t,o[0]),0):cnt(m,t,k),T=t=>g(t,"tir")+g(t,"but");
+add("Possessions",t=>g(t,"poss"));add("Tirs (total)",T);add("Actions de score",t=>g(t,"but"));add("Pertes de balle",t=>g(t,"perte"));add("Fautes",t=>g(t,"faute"));
+add("Conversion tirs → buts",t=>pc(g(t,"but"),T(t)));add("Densité (tirs / possessions)",t=>pc(T(t),g(t,"poss")));add("Efficacité (buts / possessions)",t=>pc(g(t,"but"),g(t,"poss")));add("Pertes / possessions",t=>pc(g(t,"perte"),g(t,"poss")));
+O(m.ap).filter(o=>!["poss","tir","but","perte","faute"].includes(o[0])&&!(o[2]>0)).forEach(([k,l])=>add(l,t=>g(t,k)));if(d>0){add("Tirs par minute",t=>(T(t)/d).toFixed(1));add("Buts par minute",t=>(g(t,"but")/d).toFixed(1))}}
+else{const tot=score(m,0)+score(m,1);add("Points",t=>score(m,t));add("Part des points",t=>pc(score(m,t),tot));
+O(m.ap).forEach(([k,l])=>add(l,t=>cnt(m,t,k)));
+add("Réussite (gagnants / gagnants + fautes)",t=>{const O2=O(m.ap),c=a=>a.reduce((s,o)=>s+cnt(m,t,o[0]),0),w=c(O2.filter(o=>o[2]>0));return pc(w,w+c(O2.filter(o=>o[2]<0)))})}
+return r}
+function vBil(){const L=S.matches.filter(m=>m.ap==S.ap&&m.ev.length);
+const m=L.find(x=>x.id==S.bm)||L[0];
+return `<div class="card">${L.length?`<select onchange="S.bm=this.value;R()">${L.map(x=>`<option value="${x.id}" ${m&&x.id==m.id?"selected":""}>${esc(name(x.a))} – ${esc(name(x.b))} (${score(x,0)}-${score(x,1)})</option>`).join("")}</select><table><tr><th>Indicateur<th>${esc(name(m.a))}<th>${esc(name(m.b))}</tr>${stats(m).map(r=>`<tr><td>${r[0]}<td>${r[1]}<td>${r[2]}</tr>`).join("")}</table>${m.c&&(m.c[0]||m.c[1])?`<p><b>Conseils</b><br>${esc(name(m.a))} : ${esc(m.c[0]||"–")}<br>${esc(name(m.b))} : ${esc(m.c[1]||"–")}</p>`:""}${bilx(m)}`:"Aucun match observé pour cette APSA."}</div>
+${suivi()?`<div class="card"><b>Suivi des projets de jeu</b>${suivi()}</div>`:""}<div class="card row"><button onclick="csv()">Exporter les stats (Excel)</button><button class="s" onclick="bak()">Sauvegarder</button><label class="s" style="padding:10px 14px;border-radius:10px;background:var(--soft);color:var(--pri)">Restaurer<input type="file" accept=".json" hidden onchange="imp(this)"></label></div>${rs?`<div class="card"><b>Supprimer les bilans ?</b><p>Les bilans des matchs de ${S.ap} seront effacés ; équipes, élèves et poules sont conservés. Action irréversible.</p><div class="row"><button style="background:#b3412e" onclick="rz()">Oui, supprimer les bilans</button><button class="s" onclick="rs=0;R()">Annuler</button></div></div>`:`<button class="s" onclick="rs=1;R()">Réinitialiser les bilans</button>`}`}
+function dl(n,t,ty){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:ty}));a.download=n;a.click()}
+function csv(){const rows=[["APSA","Poule","Équipe A","Équipe B","Indicateur","A","B"]];
+S.matches.filter(m=>m.ev.length).forEach(m=>{const p=(S.poules.find(x=>x.id==m.pid)||{}).n||"";stats(m).forEach(r=>rows.push([m.ap,p,name(m.a),name(m.b),...r]));if(m.c)rows.push([m.ap,p,name(m.a),name(m.b),"Conseil",m.c[0]||"",m.c[1]||""]);(m.i||[]).forEach((L,t)=>{if(L.length)rows.push([m.ap,p,name(m.a),name(m.b),"Projet de jeu choisi",t?"":L.join(" | "),t?L.join(" | "):""])});[0,1].forEach(t=>Object.entries((m.v||[{},{}])[t]||{}).forEach(([x,j])=>{const s=["Non","En partie","Oui"][j];rows.push([m.ap,p,name(m.a),name(m.b),"Projet précédent : "+x,t?"":s,t?s:""])}));});
+dl("stats_eps.csv","\ufeff"+rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(";")).join("\n"),"text/csv")}
+const bak=()=>dl("sauvegarde_eps.json",JSON.stringify(S),"application/json");
+const imp=i=>{const f=i.files[0];if(f)f.text().then(t=>{try{S=Object.assign(S,JSON.parse(t));save();R()}catch(e){alert("Fichier invalide.")}})};
+/* Conseil de fin de match */
+const conseil=m=>`<div class="card"><b>Un conseil pour la suite ?</b>${[0,1].map(t=>`<p>Pour ${esc(name(t?m.b:m.a))}</p><textarea rows="3" oninput="sv(${t},this.value)">${esc((m.c||[])[t]||"")}</textarea>`).join("")}</div>`;
+const sv=(t,v)=>{const m=cur();m.c=m.c||["",""];m.c[t]=v;save()};
+/* Espace enseignant */
+let unl=false,ea=null;
+function vEns(){
+if(!unl)return `<div class="card"><b>Espace enseignant</b><p>Entre le code d'accès.</p><input id="cd" type="password" inputmode="numeric" placeholder="Code"><button onclick="unlock()">Entrer</button> <button class="s" onclick="chg()">Retour à l'accueil</button></div>`;
+const ap=ea&&APSA[ea]?ea:(S.ap||Object.keys(APSA)[0]);ea=ap;
+return `<button style="margin-bottom:12px" onclick="chg()">← Retour à l'accueil</button><div class="card"><label><input type="checkbox" ${S.cfg.conseil?"checked":""} onchange="S.cfg.conseil=this.checked;save()">Projet de jeu et conseil de fin de match</label></div>
+<div class="card"><b>Critères observables</b> <small>Points : positif = pour l'équipe, négatif = pour l'adversaire, 0 = sans point</small><select onchange="ea=this.value;R()">${Object.keys(APSA).map(k=>`<option ${k==ap?"selected":""}>${k}</option>`).join("")}</select>
+${O(ap).map((o,i)=>`<div class="row"><input class="sp" value="${esc(o[1])}" oninput="ed('${ap}',${i},1,this.value)"><input type="number" style="width:80px" min="-10" max="10" value="${o[2]}" title="Points" onchange="ed('${ap}',${i},2,+this.value)"><button class="s" onclick="rm('${ap}',${i})">Supprimer</button></div>`).join("")}
+<div class="row"><button onclick="addO('${ap}')">Ajouter un critère</button><button class="s" onclick="rst('${ap}')">Rétablir par défaut</button></div></div>
+<div class="card"><b>Listes d'élèves (CSV)</b><p><small>Colonnes : Nom ; Prénom ; Classe</small></p><input type="file" accept=".csv,.txt" onchange="impC(this)"><p>${imsg}</p><button class="s" onclick="clr()">Supprimer les élèves importés</button></div>
+<div class="card"><b>Synchronisation des tablettes</b><p><small>Après tes modifications (critères, points, projets de jeu, listes d'élèves), exporte la configuration, puis dépose-la sur le site à côté de index.html. Les tablettes la récupèrent avec le bouton « Mise à jour ».</small></p><label><input type="checkbox" ${S.cfg.pubEl?"checked":""} onchange="S.cfg.pubEl=this.checked;save();R()">Inclure les listes d’élèves dans la configuration (données personnelles : à n’utiliser qu’avec prénom + initiale du nom)</label><p><button onclick="cfgx()">Exporter la configuration (config.json)</button></p><p><small>Configuration appliquée sur cet appareil : ${S.cv?new Date(S.cv).toLocaleString('fr-FR'):'aucune'}</small></p></div>
+<div class="card"><b>Projets de jeu proposés</b> <small>(${ap}, une par ligne)</small><textarea rows="6" oninput="si2('${ap}',this.value)">${esc(INT(ap).join("\n"))}</textarea></div>
+<button class="s" onclick="unl=false;R()">Verrouiller</button>`}
+const unlock=()=>{if($("#cd").value=="2486"){unl=true;R()}else alert("Code incorrect.")};
+const wr=ap=>{S.obs[ap]=S.obs[ap]||O(ap).map(o=>o.slice())};
+const ed=(ap,i,j,v)=>{wr(ap);S.obs[ap][i][j]=v;save();if(j==2)R()};
+const rm=(ap,i)=>{wr(ap);S.obs[ap].splice(i,1);save();R()};
+const addO=ap=>{wr(ap);S.obs[ap].push(["c"+uid(),"Nouveau critère",0]);save();R()};
+const rst=ap=>{delete S.obs[ap];save();R()};
+/* Terrain, intentions, suivi entre manches */
+const isR=ap=>ap=='Badminton'||ap=='Tennis de table',fam=ap=>APSA[ap].c?"c":ap=="Volley-ball"?"v":"r";
+const INT0={c:["Écarter le jeu","Choix passe / dribble / tir plus judicieux","Se démarquer après la passe","Jouer vite après récupération","Tirer en situation favorable"],r:["Utiliser mon coup préféré (point fort)","Varier les zones pour écarter l'adversaire","Alterner jeu court et jeu long","Limiter les fautes directes","Améliorer le service"],v:["Varier les attaques","Fiabiliser la réception","Améliorer le service","Communiquer entre partenaires"]};
+INT0.Ultimate=["Écarter le jeu","Faire moins de passes en cloche, au-dessus du défenseur","Se démarquer après la passe","Jouer vite après récupération","Favoriser les passes vers l'avant"];
+const INT=ap=>(S.cfg.int||{})[ap]||INT0[ap]||(S.cfg.int||{})[fam(ap)]||INT0[fam(ap)];
+const si2=(f,v)=>{S.cfg.int=S.cfg.int||{};S.cfg.int[f]=v.split("\n").filter(x=>x.trim());save()};
+let zn=null;
+const GR=[['Champ 4 · Affrontement collectif',['Handball','Basket-ball','Football','Rugby','Ultimate','Volley-ball']],['Champ 4 · Affrontement interindividuel',['Badminton','Tennis de table']]];
+const home=()=>GR.map(([t,L],gi)=>`<div class='card'><b>${t}</b></div><div class='grid'>${L.map(k=>`<button class='big' style='background:${gi?"#7b5ea7":"#0f6e8c"}' onclick="setAp('${k}')"><span style='font-size:26px;display:block'>${BL[k]||''}</span>${k}</button>`).join('')}</div>`).join('');
+const pick=()=>{const g={};S.teams.forEach(t=>(g[t.c||'Sans classe']=g[t.c||'Sans classe']||[]).push(t));return Object.keys(g).sort().map(c=>`<div style='margin:8px 0 2px'><b>${esc(c)}</b></div>`+g[c].sort((a,b)=>a.n.localeCompare(b.n)).map(t=>`<label><input type='checkbox' class='pk' value='${t.id}'>${esc(t.n)}</label><br>`).join('')).join('')||"Ajoute d'abord des équipes."};
+let imsg='';
+let rs=0;const rz=()=>{S.matches=S.matches.filter(m=>m.pid||m.ap!=S.ap);S.matches.forEach(m=>{if(m.ap==S.ap){m.ev=[];m.dur=0;m.t0=0;m.done=0;delete m.ts;delete m.c;delete m.i;delete m.v}});S.cur=null;S.bm=null;rs=0;save();R()};
+const RC={'Tennis de table':[12,8,76,144],'Badminton':[18,10,64,140]};
+const rc=ap=>{const [x,y,w,h]=RC[ap]||[0,0,100,160];return `left:${x}%;top:${y/1.6}%;width:${w}%;height:${h/1.6}%;right:auto;bottom:auto`};
+let ccl='';
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2800)};
+const hid=s=>{let x=0;for(const c of s)x=(x*31+c.charCodeAt(0))|0;return 'e'+(x>>>0).toString(36)};
+const cfgx=()=>{const v=Date.now();S.cv=v;save();dl('config.json',JSON.stringify({v,obs:S.obs,cfg:S.cfg,eleves:S.cfg.pubEl?S.eleves:null}),'application/json')};
+const upd=async()=>{if(!navigator.onLine)return toast('Pas de connexion internet');
+try{const r=await fetch('config.json',{cache:'no-store'});
+if(r.ok){const c=await r.json();if(c.v&&c.v!==S.cv){S.obs=c.obs||{};S.cfg=Object.assign({conseil:true},c.cfg||{});if(c.eleves)S.eleves=c.eleves;S.cv=c.v;save();toast('Configuration mise à jour ✔')}else toast('Déjà à jour ✔')}else toast('Aucune configuration publiée');
+setTimeout(()=>location.reload(),1300)}catch(e){toast('Mise à jour impossible')}};
+const suivi=()=>{const L=S.matches.filter(m=>m.ap==S.ap&&m.done&&m.ts).sort((a,b)=>a.ts-b.ts),T={},R3=['Non','En partie','Oui'];L.forEach(m=>[m.a,m.b].forEach((id,t)=>(T[id]=T[id]||[]).push([m,t])));
+return Object.keys(T).map(id=>{const E=T[id].map(([m,t],k)=>{const v=(m.v||[{},{}])[t]||{},p=(m.i||[[],[]])[t]||[],K=Object.keys(v);return K.length||p.length?`<div style='font-size:14px;margin-bottom:8px'>Rencontre ${k+1} contre ${esc(name(t?m.a:m.b))}${K.length?`<br>✔ Projet précédent : ${K.map(x=>esc(x)+' → '+R3[v[x]]).join(' ; ')}`:''}${p.length?`<br>🎯 Nouveau projet : ${p.map(esc).join(' · ')}`:''}</div>`:''}).join('');return E?`<p><b>${esc(name(id))}</b></p>`+E:''}).join('')};
+const BL={'Handball':`<svg viewBox='0 0 32 32' width='32' height='32'><circle cx='16' cy='16' r='14' fill='#f4c542' stroke='#17303b' stroke-width='1.5'/><path d='M4 12Q16 20 28 12M4 20Q16 12 28 20' fill='none' stroke='#17303b' stroke-width='1.2'/></svg>`,'Basket-ball':'🏀','Football':'⚽','Rugby':'🏉','Ultimate':'🥏','Volley-ball':'🏐','Badminton':'🏸','Tennis de table':'🏓'};
+let bp=50,bmid=null;
+const po=m=>{const hp=O(m.ap).some(o=>o[0]=='poss');for(let i=m.ev.length-1;i>=0;i--){const [t,k]=m.ev[i];if(hp){if(k=='poss')return t;if(k=='perte')return 1-t}else{const p=P(m,k);if(p>0)return t;if(p<0)return 1-t}}return null};
+const bar=m=>{const w=po(m),tg=w==null?50:w?88:12;if(bmid!=m.id){bmid=m.id;bp=tg}const s=bp;setTimeout(()=>{const b=$('#ball');if(b){b.style.left=tg+'%';bp=tg}},40);return `<div class='pos'><small>${esc(name(m.a))}</small><div class='rail'><span class='ball' id='ball' style='left:${s}%'>${BL[m.ap]||'⚽'}</span></div><small>${esc(name(m.b))}</small></div>`};
+const vEq=()=>{const cl=[...new Set(S.eleves.map(e=>e.c||'Sans classe'))].sort(),L=ccl?S.eleves.filter(e=>(e.c||'Sans classe')==ccl).sort((a,b)=>a.n.localeCompare(b.n)):[];
+return `<div class='card'><b>Créer une équipe ou un joueur</b>${cl.length?`<select onchange='ccl=this.value;R()'><option value=''>1. Choisis une classe</option>${cl.map(c=>`<option ${c==ccl?'selected':''}>${esc(c)}</option>`).join('')}</select>${L.length?`<p><small>2. Coche les élèves de l’équipe</small></p>`+L.map(e=>`<label><input type='checkbox' class='mk' value='${e.id}'>${esc(e.n)}</label><br>`).join(''):''}`:`<p><small>Aucune liste d’élèves : importe un CSV dans l’espace enseignant, ou saisis un nom.</small></p>`}<input id='tn' placeholder='Nom de l’équipe (facultatif si un seul élève)' style='margin-top:10px'><button onclick='addT()'>Créer</button></div>`+(S.teams.map(t=>`<div class='card row'><span class='sp'>${esc(t.n)}${t.c?` <small>· ${esc(t.c)}</small>`:''}${(t.m||[]).length>1?`<br><small>${t.m.map(id=>esc((S.eleves.find(e=>e.id==id)||{n:'?'}).n)).join(', ')}</small>`:''}</span><button class='s' onclick='delT("${t.id}")'>Supprimer</button></div>`).join('')||'<p>Ajoute les équipes ou les joueurs qui vont jouer.</p>')};
+const addT=()=>{const ids=[...document.querySelectorAll('.mk:checked')].map(x=>x.value),E=ids.map(id=>S.eleves.find(e=>e.id==id)).filter(Boolean);let n=$('#tn').value.trim();if(!n)n=E.length==1?E[0].n:E.length?'Équipe '+(S.teams.length+1):'';if(!n)return alert('Saisis un nom ou choisis des élèves.');S.teams.push({id:uid(),n,c:E.length?ccl:'',m:ids});save();R()};
+const impC=i=>{const f=i.files[0];if(!f)return;f.text().then(t=>{const sp=t.includes(';')?';':',';let k=0;t.split(/\r?\n/).forEach((l,x)=>{const c=l.split(sp).map(s=>s.trim().replace(/^"|"$/g,''));if(!c[0]||(x==0&&/^nom/i.test(c[0])))return;const n=(c[0]+' '+(c[1]||'')).trim(),cl=c[2]||'';if(!S.eleves.some(q=>q.n==n&&(q.c||'')==cl)){S.eleves.push({id:hid(n+'|'+(cl||'Sans classe')),n,c:cl||'Sans classe'});k++}});imsg=k+' élèves importés.';save();R()})};
+const clr=()=>{if(confirm('Supprimer tous les élèves importés ?')){S.eleves=[];save();R()}};
+const G="<g fill='none' stroke='#fff' stroke-width='1.1'>",NL="<path d='M4 80H96' stroke='#111' stroke-width='2.4'/><path d='M4 80H96' stroke='#fff' stroke-width='1' stroke-dasharray='1.5 1.5'/>";
+const hf=s=>s+`<g transform='translate(0,160) scale(1,-1)'>${s}</g>`;
+const bg=(f,c,x,y,w,h,i)=>`<rect width='100' height='160' fill='${f}'/><rect x='${x}' y='${y}' width='${w}' height='${h}' fill='${c}'/>${G}<rect x='${x}' y='${y}' width='${w}' height='${h}'/>${i}</g>`;
+const CT={
+'Tennis de table':bg('#d9e2e8','#1b5fa6',12,8,76,144,`<path d='M50 8V152'/>`+NL),
+'Badminton':bg('#cfe3d8','#2e8b6e',18,10,64,140,`<path d='M23 10V150M77 10V150M18 59H82M18 101H82M50 10V59M50 101V150M18 18H82M18 142H82'/>`+NL),
+'Tennis':bg('#bcd2e0','#3a78a8',18,12,64,136,`<path d='M26 12V148M74 12V148M26 43H74M26 117H74M50 43V117'/>`+NL),
+'Volley-ball':bg('#f0e0c8','#d9a05b',17,15,66,130,`<path d='M17 58H83M17 102H83'/>`+NL),
+'Handball':bg('#cfd9e6','#3f7fb5',15,10,70,140,hf(`<path d='M29 10A21 21 0 0 0 71 10'/><path d='M19 10A31 31 0 0 0 81 10' stroke-dasharray='3 2'/><rect x='45' y='6' width='10' height='4'/>`)+`<path d='M15 80H85'/>`),
+'Basket-ball':bg('#e8d4b8','#c98b4f',18,10,64,140,hf(`<rect x='39' y='10' width='22' height='29'/><path d='M39 39A11 11 0 0 0 61 39'/><path d='M22 10V24A28 28 0 0 0 78 24V10'/><circle cx='50' cy='16' r='2'/>`)+`<path d='M18 80H82'/><circle cx='50' cy='80' r='9'/>`),
+'Football':bg('#3b7d46','#4c9a58',5,10,90,140,hf(`<rect x='23' y='10' width='54' height='22'/><rect x='38' y='10' width='24' height='7'/>`)+`<path d='M5 80H95'/><circle cx='50' cy='80' r='12'/>`),
+'Rugby':bg('#3b7d46','#4c9a58',8,10,84,140,`<path d='M8 24H92M8 136H92M8 49H92M8 111H92M8 80H92'/><path d='M8 69H92M8 91H92' stroke-dasharray='3 2'/>`),
+'Ultimate':bg('#3b7d46','#4c9a58',25,12,50,136,`<path d='M25 36H75M25 124H75'/>`)};
+const court=(m,cell)=>`<div class='cw'><svg viewBox='0 0 100 160'>${CT[m.ap]}</svg><div class='cg' style='${rc(m.ap)}'>${[...Array(18).keys()].map(cell).join('')}</div></div><div class='row'><small>${esc(name(m.a))} (haut)</small><span class='sp'></span><small>${esc(name(m.b))} (bas)</small></div>`;const zs=z=>{zn=zn===z?null:z;R()};
+const court0=(m,cell)=>{let h=`<div class="ct"><div class="net" style="border:0">${esc(name(m.a))}</div>`;for(let z=0;z<18;z++){if(z==9)h+=`<div class="net">filet</div>`;h+=cell(z)}return h+`<div class="net" style="border:0">${esc(name(m.b))}</div></div>`};
+const ctCard=m=>`<div class="card"><b>Où ? (balle tombée ou action)</b> <small>Touche la zone, puis le critère.</small>${court(m,z=>`<button class="${zn===z?"on":""}" onclick="zs(${z})">${zn===z?"●":""}</button>`)}</div>`;
+const prev=(m,id)=>{const L=S.matches.filter(x=>x!==m&&x.ap==m.ap&&x.done&&x.ts&&(!m.ts||x.ts<m.ts)&&(x.a==id||x.b==id)&&(x.i||[[],[]])[x.a==id?0:1].length).sort((p,q)=>q.ts-p.ts)[0];return L?L.i[L.a==id?0:1]:[]};
+const rap=m=>{const h=[0,1].map(t=>{const L=prev(m,t?m.b:m.a);return L.length?`<p><b>${esc(name(t?m.b:m.a))}</b> : ${L.map(esc).join(" · ")}</p>`:""}).join("");return h?`<div class="card"><b>À observer : projet de jeu choisi à la rencontre précédente</b>${h}</div>`:""};
+const check=m=>{const h=[0,1].map(t=>{const L=prev(m,t?m.b:m.a);return L.length?`<p><b>${esc(name(t?m.b:m.a))}</b></p>${L.map((x,i)=>{const v=((m.v||[{},{}])[t]||{})[x];return `<div class="row"><span class="sp">${esc(x)}</span>${["Non","En partie","Oui"].map((l,j)=>`<button class="${v===j?"":"s"}" onclick="sk(${t},${i},${j})">${l}</button>`).join("")}</div>`}).join("")}`:""}).join("");return h?`<div class="card"><b>Le projet de jeu de la rencontre précédente a-t-il été mis en œuvre ?</b>${h}</div>`:""};
+const sk=(t,i,j)=>{const m=cur(),x=prev(m,t?m.b:m.a)[i];m.v=m.v||[{},{}];m.v[t][x]=j;save();R()};
+const coach=m=>`<div class="card"><b>Projet de jeu pour la prochaine rencontre</b> <small>(choisis 1 ou 2 projets)</small>${[0,1].map(t=>`<p><b>${esc(name(t?m.b:m.a))}</b></p>${INT(m.ap).map((x,i)=>`<label><input type="checkbox" ${((m.i||[[],[]])[t]).includes(x)?"checked":""} onchange="si(${t},${i},this.checked)">${esc(x)}</label><br>`).join("")}<textarea rows="2" placeholder="Autre conseil (facultatif)" oninput="sv(${t},this.value)">${esc((m.c||[])[t]||"")}</textarea>`).join("")}</div>`;
+const si=(t,i,on)=>{const m=cur(),x=INT(m.ap)[i];m.i=m.i||[[],[]];m.i[t]=m.i[t].filter(y=>y!=x);if(on)m.i[t].push(x);save()};
+const bilx=m=>{let h="";
+if(isR(m.ap))h+=[0,1].map(t=>`<p><b>Impacts : ${esc(name(t?m.b:m.a))}</b></p>`+court(m,z=>{const n=m.ev.filter(e=>e[0]==t&&e[2]===z).length;return `<div class="zc" style="background:rgba(255,200,0,${n?Math.min(.85,.2+n/6):0});color:#111;font-weight:700">${n||""}</div>`})).join("");
+(m.i||[]).forEach((L,t)=>{if(L.length)h+=`<p><b>Projet de jeu de ${esc(name(t?m.b:m.a))} pour la prochaine rencontre</b><br>${L.map(esc).join(" · ")}</p>`});
+[0,1].forEach(t=>{const v=(m.v||[{},{}])[t]||{},k=Object.keys(v);if(k.length)h+=`<p><b>Projet de jeu mis en œuvre par ${esc(name(t?m.b:m.a))}</b><br>${k.map(x=>esc(x)+" : "+["Non","En partie","Oui"][v[x]]).join("<br>")}</p>`});
+return h};
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+R();
+</script></body></html>
